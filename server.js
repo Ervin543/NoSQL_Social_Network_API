@@ -11,9 +11,14 @@ app.use(express.static('public'));
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-api', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
+  // useCreateIndex: true,
+  // useFindAndModify: false
+  
+  // increase bufferMaxEntries and connectTimeoutMS
+  // bufferMaxEntries: 0,
+  connectTimeoutMS: 30000
 });
+
 
 mongoose.connection.on('connected', () => {
   console.log('Mongoose connected!');
@@ -22,12 +27,12 @@ mongoose.connection.on('connected', () => {
 // Import routes
 const thoughtRoutes = require('./routes/api/thought-routes');
 const userRoutes = require('./routes/api/user-routes');
-const friendRoutes = require('./routes/api/friend-routes');
+// const friendRoutes = require('./routes/api/friend-routes');
 
 // Add routes
 app.use('/api/thoughts', thoughtRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/friends', friendRoutes);
+// app.use('/api/friends', friendRoutes);
 
 // Default 404 route
 app.use((req, res) => {
