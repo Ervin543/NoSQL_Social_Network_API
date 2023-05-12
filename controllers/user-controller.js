@@ -22,7 +22,7 @@ const userController = {
 
     // GET a single user by _id and populated thought and friend data
     getUserById(req, res) {
-        User.findOne({ _id: req.params.userId })
+        User.findOne({ _id: req.params.id })
             .populate({
                 path: 'thoughts',
                 select: '-__v'

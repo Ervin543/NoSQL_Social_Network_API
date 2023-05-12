@@ -1,6 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
+//const mongoose = require('mongoose');
+const db = require("./config/connection")
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -8,21 +8,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-api', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false
-  
-  // increase bufferMaxEntries and connectTimeoutMS
-  // bufferMaxEntries: 0,
-  connectTimeoutMS: 30000
-});
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-api', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   // useCreateIndex: true,
+//   // useFindAndModify: false
+//   
+//   // increase bufferMaxEntries and connectTimeoutMS
+//   // bufferMaxEntries: 0,
+//   connectTimeoutMS: 30000
+// });
 
 
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected!');
-});
+// mongoose.connection.on('connected', () => {
+//   console.log('Mongoose connected!');
+// });
 
 // Import routes
 const thoughtRoutes = require('./routes/api/thought-routes');
@@ -38,7 +38,8 @@ app.use('/api/users', userRoutes);
 app.use((req, res) => {
   res.status(404).send('<h1>404 Error</h1><p>Page not found!</p>');
 });
-
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}!`);
-});
+db.once('open', ()=>{
+  app.listen(PORT, () => {
+    console.log(`App running on port ${PORT}!`);
+  });
+})
